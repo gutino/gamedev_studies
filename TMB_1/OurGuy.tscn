@@ -5,36 +5,71 @@
 [sub_resource type="GDScript" id=1]
 script/source = "extends KinematicBody2D
 
-export var _HorizontalVelocity := 300
-export var _JumpForce := -600
-export var _GravityVelocity := 300
+export var _HorizontalVelocity := 400.0
+export var _GravityVelocity := 600
+export var _JumpForce := 1300
+export var _JumpingDuration := 0.25
 
 var _IsJumping := false
+var _GoingLeft := false
 
 func _ready():
 	$JumpTimer.one_shot = true
 
+func changeSide():
+	$Sprite.flip_h = not $Sprite.flip_h
+	
+func fixBoundary():
+	var windowSize = get_viewport().size
+	
+	if self.position.y > windowSize.y:
+		self.position.y = 0
+	if self.position.x > windowSize.x:
+		self.position.x = 0
+	
+	if self.position.x < $Sprite.get_rect().size.x*2: # Porque *2?
+		self.position.x = $Sprite.get_rect().size.x*2
+
 func _process(delta):
-	
- 
-	
 	var finalVelocity : Vector2 = Vector2(0,_GravityVelocity)
+	var floorAngle : float
 	
 	if Input.is_action_pressed(\"ui_right\"):
 		finalVelocity.x += _HorizontalVelocity
+		if _GoingLeft:
+			changeSide()
+			_GoingLeft = false
 	elif Input.is_action_pressed(\"ui_left\"):
 		finalVelocity.x -= _HorizontalVelocity
+		if not _GoingLeft:
+			changeSide()
+			_GoingLeft = true
 	
 	if Input.is_action_just_pressed(\"ui_accept\") && self.is_on_floor():
 		_IsJumping = true
-		$JumpTimer.start(.2)
+		$JumpTimer.start(_JumpingDuration)
 	
 	if _IsJumping:
-		finalVelocity.y += _JumpForce
-		self.move_and_slide(finalVelocity, Vector2.UP,true)
+		finalVelocity.y -= _JumpForce
+		
+		if finalVelocity.x == 0:
+			if _GoingLeft:
+				finalVelocity.x -= _HorizontalVelocity/2
+			else:
+				finalVelocity.x += _HorizontalVelocity/2
+		
+		self.move_and_slide(finalVelocity, Vector2.UP, true)
 	else:
-		self.move_and_slide_with_snap(finalVelocity, Vector2.DOWN*10 ,Vector2.UP,true)
+		floorAngle = get_floor_normal().angle()
+		if is_on_floor():
+			finalVelocity.y *= floorAngle
+		self.move_and_slide_with_snap(finalVelocity, Vector2.DOWN*100, Vector2.UP, true)
 
+	fixBoundary()
+	print(finalVelocity.x)
+
+func _on_JumpTimer_timeout():
+	_IsJumping = false
 "
 
 [sub_resource type="CapsuleShape2D" id=2]
@@ -55,3 +90,4 @@ scale = Vector2( 5, 5 )
 shape = SubResource( 2 )
 
 [node name="JumpTimer" type="Timer" parent="."]
+[connection signal="timeout" from="JumpTimer" to="." method="_on_JumpTimer_timeout"]

@@ -8,7 +8,7 @@ extents = Vector2( 199.933, 20.1051 )
 [node name="MainScene" type="Node"]
 
 [node name="Ground" type="StaticBody2D" parent="."]
-position = Vector2( 238.371, 457.584 )
+position = Vector2( 275.14, 523.769 )
 
 [node name="ColorRect" type="ColorRect" parent="Ground"]
 margin_right = 400.0
@@ -23,7 +23,7 @@ position = Vector2( 200, 20 )
 shape = SubResource( 1 )
 
 [node name="Ground2" type="StaticBody2D" parent="."]
-position = Vector2( 531.333, 460.952 )
+position = Vector2( 568.102, 527.137 )
 rotation = -0.499122
 
 [node name="ColorRect" type="ColorRect" parent="Ground2"]
@@ -39,7 +39,8 @@ position = Vector2( 200, 20 )
 shape = SubResource( 1 )
 
 [node name="Ground3" type="StaticBody2D" parent="."]
-position = Vector2( -103.226, 354.315 )
+position = Vector2( 66.5912, 442.675 )
+rotation = 0.226512
 
 [node name="ColorRect" type="ColorRect" parent="Ground3"]
 margin_right = 400.0
@@ -53,5 +54,21 @@ __meta__ = {
 position = Vector2( 200, 20 )
 shape = SubResource( 1 )
 
+[node name="Ground4" type="StaticBody2D" parent="."]
+position = Vector2( 182.504, 505.671 )
+rotation = -2.4209
+
+[node name="ColorRect" type="ColorRect" parent="Ground4"]
+margin_right = 400.0
+margin_bottom = 40.0
+color = Color( 0, 0.835294, 1, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Ground4"]
+position = Vector2( 200, 20 )
+shape = SubResource( 1 )
+
 [node name="OurGuy" parent="." instance=ExtResource( 1 )]
-position = Vector2( 657.563, 283.233 )
+position = Vector2( 494.277, 295.832 )
