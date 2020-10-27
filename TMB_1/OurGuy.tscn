@@ -5,10 +5,11 @@
 [sub_resource type="GDScript" id=1]
 script/source = "extends KinematicBody2D
 
-export var _HorizontalVelocity := 400.0
-export var _GravityVelocity := 600
-export var _JumpForce := 1300
+export var _HorizontalVelocity := 80.0
+export var _GravityVelocity := 120
+export var _JumpForce := 260
 export var _JumpingDuration := 0.25
+export var _diagonalFactor := 1.3
 
 var _IsJumping := false
 var _GoingLeft := false
@@ -17,7 +18,7 @@ func _ready():
 	$JumpTimer.one_shot = true
 
 func changeSide():
-	$Sprite.flip_h = not $Sprite.flip_h
+	$Sprite.scale.x *= -1
 	
 func fixBoundary():
 	var windowSize = get_viewport().size
@@ -27,7 +28,7 @@ func fixBoundary():
 	if self.position.x > windowSize.x:
 		self.position.x = 0
 	
-	if self.position.x < $Sprite.get_rect().size.x*2: # Porque *2?
+	if self.position.x < $Sprite.get_rect().size.x*2:
 		self.position.x = $Sprite.get_rect().size.x*2
 
 func _process(delta):
@@ -51,43 +52,50 @@ func _process(delta):
 	
 	if _IsJumping:
 		finalVelocity.y -= _JumpForce
-		
-		if finalVelocity.x == 0:
-			if _GoingLeft:
-				finalVelocity.x -= _HorizontalVelocity/2
-			else:
-				finalVelocity.x += _HorizontalVelocity/2
-		
 		self.move_and_slide(finalVelocity, Vector2.UP, true)
 	else:
-		floorAngle = get_floor_normal().angle()
 		if is_on_floor():
-			finalVelocity.y *= floorAngle
-		self.move_and_slide_with_snap(finalVelocity, Vector2.DOWN*100, Vector2.UP, true)
-
+			floorAngle = get_floor_normal().angle_to(Vector2.UP)
+			var absFloorAngle = abs(floorAngle)
+			
+			if floorAngle > 0 and not _GoingLeft:
+				finalVelocity.x *= (1 + absFloorAngle)*_diagonalFactor
+			elif floorAngle > 0 and _GoingLeft:
+				finalVelocity.x *= (1 - absFloorAngle)*_diagonalFactor
+			elif floorAngle < 0 and _GoingLeft:
+				finalVelocity.x *= (1 + absFloorAngle)*_diagonalFactor
+			elif floorAngle < 0 and not _GoingLeft:
+				finalVelocity.x *= (1 - absFloorAngle)*_diagonalFactor
+		
+		self.move_and_slide_with_snap(finalVelocity, Vector2.DOWN*20, Vector2.UP, true)
+	
 	fixBoundary()
-	print(finalVelocity.x)
+
 
 func _on_JumpTimer_timeout():
 	_IsJumping = false
+
+func _on_Coin_pickedUp():
+	print(\"Peguei!!\")
 "
 
-[sub_resource type="CapsuleShape2D" id=2]
-radius = 7.5
-height = 16.2
+[sub_resource type="RectangleShape2D" id=2]
+extents = Vector2( 5.04, 14.9329 )
 
 [node name="OurGuy" type="KinematicBody2D"]
 script = SubResource( 1 )
 
 [node name="Sprite" type="Sprite" parent="."]
-position = Vector2( 0, -79.7354 )
-scale = Vector2( 5, 5 )
+position = Vector2( 0, -16 )
 texture = ExtResource( 1 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2( 0, -76.7354 )
-scale = Vector2( 5, 5 )
+position = Vector2( 0, -15 )
 shape = SubResource( 2 )
 
 [node name="JumpTimer" type="Timer" parent="."]
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2( 0, -15 )
+current = true
 [connection signal="timeout" from="JumpTimer" to="." method="_on_JumpTimer_timeout"]

@@ -23,6 +23,15 @@ config/icon="res://icon.png"
 
 settings/fps/force_fps=60
 
+[display]
+
+window/size/width=256
+window/size/height=128
+window/size/test_width=1024
+window/size/test_height=512
+window/stretch/mode="viewport"
+window/stretch/aspect="expand"
+
 [rendering]
 
 environment/default_environment="res://default_env.tres"

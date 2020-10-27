@@ -1,6 +1,7 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://OurGuy.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Coin.tscn" type="PackedScene" id=2]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 199.933, 20.1051 )
@@ -8,7 +9,8 @@ extents = Vector2( 199.933, 20.1051 )
 [node name="MainScene" type="Node"]
 
 [node name="Ground" type="StaticBody2D" parent="."]
-position = Vector2( 275.14, 523.769 )
+position = Vector2( 22.2129, 106.494 )
+scale = Vector2( 0.185874, 0.199941 )
 
 [node name="ColorRect" type="ColorRect" parent="Ground"]
 margin_right = 400.0
@@ -23,8 +25,8 @@ position = Vector2( 200, 20 )
 shape = SubResource( 1 )
 
 [node name="Ground2" type="StaticBody2D" parent="."]
-position = Vector2( 568.102, 527.137 )
-rotation = -0.499122
+position = Vector2( 96.5624, 81.7606 )
+scale = Vector2( 0.185874, 0.199941 )
 
 [node name="ColorRect" type="ColorRect" parent="Ground2"]
 margin_right = 400.0
@@ -39,8 +41,8 @@ position = Vector2( 200, 20 )
 shape = SubResource( 1 )
 
 [node name="Ground3" type="StaticBody2D" parent="."]
-position = Vector2( 66.5912, 442.675 )
-rotation = 0.226512
+position = Vector2( 142.855, 57.6017 )
+scale = Vector2( 0.185874, 0.199941 )
 
 [node name="ColorRect" type="ColorRect" parent="Ground3"]
 margin_right = 400.0
@@ -54,21 +56,13 @@ __meta__ = {
 position = Vector2( 200, 20 )
 shape = SubResource( 1 )
 
-[node name="Ground4" type="StaticBody2D" parent="."]
-position = Vector2( 182.504, 505.671 )
-rotation = -2.4209
-
-[node name="ColorRect" type="ColorRect" parent="Ground4"]
-margin_right = 400.0
-margin_bottom = 40.0
-color = Color( 0, 0.835294, 1, 1 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Ground4"]
-position = Vector2( 200, 20 )
-shape = SubResource( 1 )
-
 [node name="OurGuy" parent="." instance=ExtResource( 1 )]
-position = Vector2( 494.277, 295.832 )
+position = Vector2( 56.842, 100.554 )
+
+[node name="Coin" parent="." instance=ExtResource( 2 )]
+position = Vector2( 176.22, 43.4865 )
+
+[node name="Coin2" parent="." instance=ExtResource( 2 )]
+position = Vector2( 203.262, 43.4865 )
+[connection signal="pickedUp" from="Coin" to="OurGuy" method="_on_Coin_pickedUp"]
+[connection signal="pickedUp" from="Coin2" to="OurGuy" method="_on_Coin_pickedUp"]
