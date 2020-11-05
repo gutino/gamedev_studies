@@ -7,84 +7,80 @@ script/source = "extends KinematicBody2D
 
 export var _HorizontalVelocity := 60.0
 export var _GravityVelocity := 120
-export var _JumpForce := 120
-export var _JumpingDuration := 0.25
-export var _diagonalFactor := 1.3
-export var _Acceleration := 0.1
+export var _JumpForce := 150
+export var _JumpingDuration := 0.3
+export var _DiagonalFactor := 1.3
+export var _Accel := 0.1
+export var _Deaccel := 0.3
 export var _SprintVelocity := 130.0
 
 var _CurrSpeed := Vector2(0, 0)
 var _GravAcceleration := 0.25
+var _JumpDeaccel := 0.05
 var _IsJumping := false
 var _GoingLeft := false
 
-func _ready():
-	$JumpTimer.one_shot = true
+func getFinalXSpeed() -> void:
+  var inputVelocity := _HorizontalVelocity
+  
+  if Input.is_action_pressed(\"ui_shift\"):
+    inputVelocity = _SprintVelocity
+  
+  if Input.is_action_pressed(\"ui_right\") || Input.is_action_pressed(\"ui_left\"):
+    var inputStrength = (
+      Input.get_action_strength(\"ui_right\") - Input.get_action_strength(\"ui_left\")
+    )
+    _CurrSpeed.x = lerp(_CurrSpeed.x, inputVelocity * inputStrength, _Accel)
+  else:
+    _CurrSpeed.x = lerp(_CurrSpeed.x, 0, _Deaccel)
 
-func changeSide():
-	$Sprite.scale.x *= -1
+func getFinalYSpeed() -> void:
+  if self.is_on_floor():
+    _CurrSpeed.y = 1.0
+  else:
+    if _IsJumping:
+      _CurrSpeed.y = lerp(_CurrSpeed.y, 0, _JumpDeaccel)
+    else:
+      _CurrSpeed.y = lerp(_CurrSpeed.y, _GravityVelocity, _GravAcceleration)
+
+func _ready():
+  $JumpTimer.one_shot = true
+
+func calcSpriteSide() -> void:
+  if _CurrSpeed.x > 0 && _GoingLeft:
+    _GoingLeft = false
+    $Sprite.scale.x *= -1
+  elif _CurrSpeed.x < 0 && !_GoingLeft:
+    _GoingLeft = true
+    $Sprite.scale.x *= -1
 
 func _process(delta):
-	var finalVelocity := Vector2(0,_GravityVelocity)
-	var floorAngle : float
-	var inputVelocity := _HorizontalVelocity
-	
-	if Input.is_action_pressed(\"ui_shift\"):
-		inputVelocity = _SprintVelocity
-	
-	if Input.is_action_pressed(\"ui_right\"):
-		finalVelocity.x = lerp(_CurrSpeed.x, inputVelocity, _Acceleration)
-		if _GoingLeft:
-			changeSide()
-			_GoingLeft = false
-	elif Input.is_action_pressed(\"ui_left\"):
-		finalVelocity.x = lerp(_CurrSpeed.x, -inputVelocity, _Acceleration)
-		if not _GoingLeft:
-			changeSide()
-			_GoingLeft = true
-	else:
-		finalVelocity.x = lerp(_CurrSpeed.x, 0, _Acceleration)
-	
-	if Input.is_action_just_pressed(\"ui_accept\") && self.is_on_floor():
-		_IsJumping = true
-		$JumpTimer.start(_JumpingDuration)
-	
-	if not self.is_on_floor():
-		if not _IsJumping:
-			finalVelocity.y = lerp(_CurrSpeed.y, _GravityVelocity, _GravAcceleration)
-		else:
-			finalVelocity.y = lerp(_JumpForce, 0, _GravAcceleration)
-	
-	if _IsJumping:
-		finalVelocity.y = -_JumpForce
-		self.move_and_slide(finalVelocity, Vector2.UP, true)
-	else:
-		if is_on_floor():
-			floorAngle = get_floor_normal().angle_to(Vector2.UP)
-			var absFloorAngle = abs(floorAngle)
-			
-			if floorAngle > 0 and not _GoingLeft:
-				finalVelocity.x *= (1 + absFloorAngle)*_diagonalFactor
-			elif floorAngle > 0 and _GoingLeft:
-				finalVelocity.x *= (1 - absFloorAngle)*_diagonalFactor
-			elif floorAngle < 0 and _GoingLeft:
-				finalVelocity.x *= (1 + absFloorAngle)*_diagonalFactor
-			elif floorAngle < 0 and not _GoingLeft:
-				finalVelocity.x *= (1 - absFloorAngle)*_diagonalFactor
-		
-		self.move_and_slide_with_snap(finalVelocity, Vector2.DOWN, 
-			Vector2.UP, true)
-	
-	_CurrSpeed = finalVelocity
-	
-	print(finalVelocity.y)
-	
+  var floorAngle : float
+  
+  self.getFinalXSpeed()
+  
+  if Input.is_action_just_pressed(\"ui_accept\") && self.is_on_floor():
+    _IsJumping = true
+    _CurrSpeed.y = -_JumpForce
+    $JumpTimer.start(_JumpingDuration)
+  elif Input.is_action_just_released(\"ui_accept\"):
+    $JumpTimer.stop()
+    _IsJumping = false
+  else:
+    self.getFinalYSpeed()
+  
+  if _IsJumping:
+    self.move_and_slide(_CurrSpeed, Vector2.UP, true)
+  else:
+    self.move_and_slide_with_snap(_CurrSpeed, Vector2.DOWN, Vector2.UP, true)
+    
+  calcSpriteSide()
+
 func _on_JumpTimer_timeout():
-	_IsJumping = false
+  _IsJumping = false
 
 func _on_Coin_pickedUp():
-	print(\"Peguei!!\")
-
+  print(\"Peguei!!\")
 "
 
 [sub_resource type="RectangleShape2D" id=2]
