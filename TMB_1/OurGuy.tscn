@@ -1,6 +1,10 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://OurGuy.png" type="Texture" id=1]
+[ext_resource path="res://StateMachine.gd" type="Script" id=2]
+[ext_resource path="res://Idle.gd" type="Script" id=3]
+[ext_resource path="res://Move.gd" type="Script" id=4]
+[ext_resource path="res://Jump.gd" type="Script" id=5]
 
 [sub_resource type="GDScript" id=1]
 script/source = "extends KinematicBody2D
@@ -20,67 +24,39 @@ var _JumpDeaccel := 0.05
 var _IsJumping := false
 var _GoingLeft := false
 
-func getFinalXSpeed() -> void:
-  var inputVelocity := _HorizontalVelocity
-  
-  if Input.is_action_pressed(\"ui_shift\"):
-    inputVelocity = _SprintVelocity
-  
-  if Input.is_action_pressed(\"ui_right\") || Input.is_action_pressed(\"ui_left\"):
-    var inputStrength = (
-      Input.get_action_strength(\"ui_right\") - Input.get_action_strength(\"ui_left\")
-    )
-    _CurrSpeed.x = lerp(_CurrSpeed.x, inputVelocity * inputStrength, _Accel)
-  else:
-    _CurrSpeed.x = lerp(_CurrSpeed.x, 0, _Deaccel)
+func calcSpriteSide() -> void:
+	if _CurrSpeed.x > 0 && _GoingLeft:
+		_GoingLeft = false
+		$Sprite.scale.x *= -1
+	elif _CurrSpeed.x < 0 && !_GoingLeft:
+		_GoingLeft = true
+		$Sprite.scale.x *= -1
 
 func getFinalYSpeed() -> void:
-  if self.is_on_floor():
-    _CurrSpeed.y = 1.0
-  else:
-    if _IsJumping:
-      _CurrSpeed.y = lerp(_CurrSpeed.y, 0, _JumpDeaccel)
-    else:
-      _CurrSpeed.y = lerp(_CurrSpeed.y, _GravityVelocity, _GravAcceleration)
-
-func _ready():
-  $JumpTimer.one_shot = true
-
-func calcSpriteSide() -> void:
-  if _CurrSpeed.x > 0 && _GoingLeft:
-    _GoingLeft = false
-    $Sprite.scale.x *= -1
-  elif _CurrSpeed.x < 0 && !_GoingLeft:
-    _GoingLeft = true
-    $Sprite.scale.x *= -1
+	if self.is_on_floor():
+		self._CurrSpeed.y = 1.0
+	else:
+		if self._IsJumping:
+			self._CurrSpeed.y = lerp(self._CurrSpeed.y, 0, self._JumpDeaccel)
+		else:
+			self._CurrSpeed.y = lerp(self._CurrSpeed.y, self._GravityVelocity, self._GravAcceleration)
 
 func _process(delta):
-  var floorAngle : float
-  
-  self.getFinalXSpeed()
-  
-  if Input.is_action_just_pressed(\"ui_accept\") && self.is_on_floor():
-    _IsJumping = true
-    _CurrSpeed.y = -_JumpForce
-    $JumpTimer.start(_JumpingDuration)
-  elif Input.is_action_just_released(\"ui_accept\"):
-    $JumpTimer.stop()
-    _IsJumping = false
-  else:
-    self.getFinalYSpeed()
-  
-  if _IsJumping:
-    self.move_and_slide(_CurrSpeed, Vector2.UP, true)
-  else:
-    self.move_and_slide_with_snap(_CurrSpeed, Vector2.DOWN, Vector2.UP, true)
-    
-  calcSpriteSide()
+	
+	if self._IsJumping:
+		self.move_and_slide(self._CurrSpeed, Vector2.UP, true)
+	else:
+		self.move_and_slide_with_snap(self._CurrSpeed, Vector2.DOWN, Vector2.UP, true)
+	
+	self.getFinalYSpeed()
+	
+	calcSpriteSide()
 
 func _on_JumpTimer_timeout():
-  _IsJumping = false
+	_IsJumping = false
 
 func _on_Coin_pickedUp():
-  print(\"Peguei!!\")
+	print(\"Peguei!!\")
 "
 
 [sub_resource type="RectangleShape2D" id=2]
@@ -88,6 +64,18 @@ extents = Vector2( 5.04, 14.9329 )
 
 [node name="OurGuy" type="KinematicBody2D"]
 script = SubResource( 1 )
+
+[node name="StateMachine" type="Node" parent="."]
+script = ExtResource( 2 )
+
+[node name="Idle" type="Node" parent="StateMachine"]
+script = ExtResource( 3 )
+
+[node name="Move" type="Node" parent="StateMachine"]
+script = ExtResource( 4 )
+
+[node name="Jump" type="Node" parent="StateMachine"]
+script = ExtResource( 5 )
 
 [node name="Sprite" type="Sprite" parent="."]
 position = Vector2( 0, -16 )
@@ -98,6 +86,7 @@ position = Vector2( 0, -15 )
 shape = SubResource( 2 )
 
 [node name="JumpTimer" type="Timer" parent="."]
+one_shot = true
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2( 0, -15 )
