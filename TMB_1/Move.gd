@@ -1,9 +1,13 @@
 extends State
 
 func process(delta):
-	
 	if !self.checkMovementInput():
 		_Machine.changeState("Idle")
+		return
+		
+	if Input.is_action_just_pressed("ui_accept") && _Actor.is_on_floor():
+		#_Machine.changeState("Jump")
+		_Machine.changeState("Attack")
 		return
 	
 	self.getFinalXSpeed()
@@ -14,7 +18,6 @@ func getFinalXSpeed() -> void:
 	if Input.is_action_pressed("ui_shift"):
 		inputVelocity = _Actor._SprintVelocity
   
-
 	var inputStrength = (
 		Input.get_action_strength("ui_right") - Input.get_action_strength("ui_left")
 	)

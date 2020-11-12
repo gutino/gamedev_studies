@@ -1,8 +1,9 @@
-[gd_scene load_steps=23 format=2]
+[gd_scene load_steps=24 format=2]
 
 [ext_resource path="res://OurGuy.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Coin.tscn" type="PackedScene" id=2]
 [ext_resource path="res://TileSet.png" type="Texture" id=3]
+[ext_resource path="res://BG01.png" type="Texture" id=4]
 
 [sub_resource type="ConvexPolygonShape2D" id=1]
 points = PoolVector2Array( 0, 0, 8, 0, 8, 8, 0, 8 )
@@ -193,13 +194,27 @@ points = PoolVector2Array( 0, 0, 8, 0, 8, 8, 0, 8 )
 [node name="MainScene" type="Node"]
 
 [node name="OurGuy" parent="." instance=ExtResource( 1 )]
-position = Vector2( 8, 120 )
+position = Vector2( 8, 0 )
 
 [node name="TileMap" type="TileMap" parent="."]
+position = Vector2( 0, -120 )
 tile_set = SubResource( 19 )
 cell_size = Vector2( 8, 8 )
 format = 1
 tile_data = PoolIntArray( 720908, 0, 1, 720909, 0, 1, 720910, 0, 1, 720911, 0, 1, 720912, 0, 1, 851975, 0, 1, 851976, 0, 1, 851977, 0, 1, 851978, 0, 1, 851979, 0, 1, 917506, 0, 196608, 917507, 0, 196609, 917508, 0, 196609, 917509, 0, 196610, 917510, -1610612736, 196608, 983040, 0, 1, 983041, 0, 2, 983042, 0, 2, 983043, 0, 2, 983044, 0, 2, 983045, 0, 2, 983046, 0, 2, 983047, 0, 2, 983048, 0, 2, 983049, 0, 2, 983050, 0, 2, 983051, 0, 2, 983052, 0, 2, 983053, 0, 2, 983054, 0, 2, 983055, 0, 2, 983056, 0, 2, 983057, 0, 2, 983058, 0, 2, 983059, 0, 2, 983060, 0, 2, 983061, 0, 2, 983062, 0, 2, 983063, 0, 2, 983064, 0, 2, 983065, 0, 2, 983066, 0, 2, 983067, 0, 2, 983068, 0, 2, 983069, 0, 2, 983070, 0, 2, 983071, 0, 2, 983072, 0, 2, 983073, 0, 2, 983074, 0, 2, 983075, 0, 3 )
 
 [node name="Coin" parent="." instance=ExtResource( 2 )]
-position = Vector2( 200.921, 95.4093 )
+position = Vector2( 200.921, -24.5907 )
+
+[node name="ParallaxBackground" type="ParallaxBackground" parent="."]
+scroll_base_offset = Vector2( 0, -32 )
+scroll_limit_begin = Vector2( 0, -144 )
+scroll_limit_end = Vector2( 0, 144 )
+
+[node name="ParallaxLayer" type="ParallaxLayer" parent="ParallaxBackground"]
+motion_scale = Vector2( 0.4, 1 )
+
+[node name="Sprite" type="Sprite" parent="ParallaxBackground/ParallaxLayer"]
+texture = ExtResource( 4 )
+region_enabled = true
+region_rect = Rect2( 0, 0, 640, 288 )
