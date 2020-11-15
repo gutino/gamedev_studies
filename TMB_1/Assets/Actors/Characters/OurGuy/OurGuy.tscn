@@ -96,5 +96,5 @@ position = Vector2( 0, -15 )
 current = true
 
 [node name="SwordSpawn" type="Node2D" parent="."]
-position = Vector2( 0, -20 )
+position = Vector2( 0, -16 )
 [connection signal="timeout" from="JumpTimer" to="." method="_on_JumpTimer_timeout"]

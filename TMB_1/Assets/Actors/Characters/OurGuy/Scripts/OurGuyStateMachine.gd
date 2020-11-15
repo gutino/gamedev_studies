@@ -18,10 +18,10 @@ func _physics_process(delta):
 func changeState(nextState:String) -> void:
 	var nextStateNode : State = self.get_node_or_null(nextState)
 	
-	print("----------------------\nChanging state\nCurrent: "+self._CurrState.name+"\nNext:"+nextState)
+	#print("----------------------\nChanging state\nCurrent: "+self._CurrState.name+"\nNext:"+nextState)
 	
 	if (_CurrState == nextStateNode):
-		print("Same state, change canceled")
+	#	print("Same state, change canceled")
 		return
 	
 	_CurrState.exit()
