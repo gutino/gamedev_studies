@@ -63,6 +63,7 @@ func _on_Coin_pickedUp():
 extents = Vector2( 5.04, 14.9329 )
 
 [node name="OurGuy" type="KinematicBody2D"]
+collision_mask = 0
 script = SubResource( 1 )
 
 [node name="StateMachine" type="Node" parent="."]

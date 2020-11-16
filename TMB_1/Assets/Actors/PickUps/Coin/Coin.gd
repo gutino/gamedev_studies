@@ -1,11 +1,9 @@
-extends Area2D
+extends PickUpItem
 
-signal pickedUp
-
-func _ready():
-	pass
-
-func _on_Coin_body_entered(body):
+func _PickedUp(body):
 	if body.has_method("_on_Coin_pickedUp"):
 		body._on_Coin_pickedUp() 
 	self.queue_free()
+
+func DisableCollision():
+	$CollisionShape2D.disabled = true
