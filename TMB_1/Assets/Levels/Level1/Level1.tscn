@@ -1,17 +1,18 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://Assets/Actors/Characters/OurGuy/OurGuy.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Assets/Objects/Utils/CoinSpawner/CoinSpawner.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Assets/Levels/Level1/TileSetResource.tres" type="TileSet" id=3]
 [ext_resource path="res://Assets/Levels/Level1/BG01.png" type="Texture" id=4]
 [ext_resource path="res://Assets/Actors/PickUps/Chest/Chest.tscn" type="PackedScene" id=5]
+[ext_resource path="res://Assets/Actors/Characters/OurSnek/OurSnek.tscn" type="PackedScene" id=6]
 
 [sub_resource type="GDScript" id=1]
 script/source = "extends Node
 
 func _input(event):
 	if (Input.is_action_just_pressed(\"ui_cancel\")):
-		get_tree().reload_current_scene()
+		self.get_tree().reload_current_scene()
 "
 
 [sub_resource type="GDScript" id=2]
@@ -108,4 +109,7 @@ _Formation = 3
 [node name="CoinSpawner6" parent="Coins" instance=ExtResource( 2 )]
 position = Vector2( -40, -8 )
 _Formation = 4
+
+[node name="OurSnek" parent="." instance=ExtResource( 6 )]
+position = Vector2( 21.0331, -7.93701 )
 [connection signal="body_entered" from="KillPlane" to="KillPlane" method="_on_KillPlane_body_entered"]

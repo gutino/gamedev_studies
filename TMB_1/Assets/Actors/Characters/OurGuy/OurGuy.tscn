@@ -72,6 +72,9 @@ func EngageAttack():
 func DisengageAttack():
 	self._Attacking = false
 
+func OnDamage():
+	self.get_tree().reload_current_scene()
+
 func _on_JumpTimer_timeout():
 	_IsJumping = false
 
