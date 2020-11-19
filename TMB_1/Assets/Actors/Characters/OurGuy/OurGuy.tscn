@@ -1,14 +1,15 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://Assets/Actors/Characters/OurGuy/OurGuy.png" type="Texture" id=1]
 [ext_resource path="res://Assets/Actors/Characters/OurGuy/Scripts/OurGuyStateMachine.gd" type="Script" id=2]
 [ext_resource path="res://Assets/Actors/Characters/OurGuy/Scripts/States/Idle.gd" type="Script" id=3]
 [ext_resource path="res://Assets/Actors/Characters/OurGuy/Scripts/States/Move.gd" type="Script" id=4]
 [ext_resource path="res://Assets/Actors/Characters/OurGuy/Scripts/States/Jump.gd" type="Script" id=5]
-[ext_resource path="res://Assets/Actors/Characters/OurGuy/Scripts/States/Attack.gd" type="Script" id=6]
 
 [sub_resource type="GDScript" id=1]
 script/source = "extends KinematicBody2D
+
+const _Sword = preload(\"OurSword.tscn\")
 
 export var _HorizontalVelocity := 80.0
 export var _GravityVelocity := 120
@@ -24,6 +25,7 @@ var _GravAcceleration := 0.25
 var _JumpDeaccel := 0.05
 var _IsJumping := false
 var _GoingLeft := false
+var _Attacking := false
 
 func calcSpriteSide() -> void:
 	if _CurrSpeed.x > 0 && _GoingLeft:
@@ -52,6 +54,24 @@ func _process(delta):
 	
 	calcSpriteSide()
 
+func EngageAttack():
+	self._Attacking = true
+	var sword_obj = _Sword.instance()
+	var anim = sword_obj.get_node(\"AnimationPlayer\")
+	
+	sword_obj.connect(\"AttackEnded\", self, \"DisengageAttack\")
+	sword_obj.scale.x = self.get_node(\"Sprite\").scale.x
+	
+	if self._GoingLeft:
+		anim.play(\"AttackL\")
+	else:
+		anim.play(\"AttackR\")
+	
+	self.get_node(\"SwordSpawn\").add_child(sword_obj)
+
+func DisengageAttack():
+	self._Attacking = false
+
 func _on_JumpTimer_timeout():
 	_IsJumping = false
 
@@ -77,9 +97,6 @@ script = ExtResource( 4 )
 
 [node name="Jump" type="Node" parent="StateMachine"]
 script = ExtResource( 5 )
-
-[node name="Attack" type="Node" parent="StateMachine"]
-script = ExtResource( 6 )
 
 [node name="Sprite" type="Sprite" parent="."]
 position = Vector2( 0, -16 )

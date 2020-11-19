@@ -1,15 +1,13 @@
-extends State
+extends OurGuyState
 
 func process(delta):
+	.process(delta)
 	if !self.checkMovementInput():
 		_Machine.changeState("Idle")
 		return
 		
 	if Input.is_action_just_pressed("ui_accept") && _Actor.is_on_floor():
 		_Machine.changeState("Jump")
-		return
-	if Input.is_action_just_pressed("attack") && _Actor.is_on_floor():
-		_Machine.changeState("Attack")
 		return
 	
 	self.getFinalXSpeed()

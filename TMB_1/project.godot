@@ -9,6 +9,11 @@
 config_version=4
 
 _global_script_classes=[ {
+"base": "State",
+"class": "OurGuyState",
+"language": "GDScript",
+"path": "res://OurGuyState.gd"
+}, {
 "base": "Area2D",
 "class": "PickUpItem",
 "language": "GDScript",
@@ -25,6 +30,7 @@ _global_script_classes=[ {
 "path": "res://Assets/Scripts/StateMachine.gd"
 } ]
 _global_script_class_icons={
+"OurGuyState": "",
 "PickUpItem": "",
 "State": "",
 "StateMachine": ""

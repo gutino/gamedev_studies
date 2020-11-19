@@ -1,6 +1,7 @@
-extends State
+extends OurGuyState
 
 func process(delta):
+	.process(delta)
 	
 	if Input.is_action_just_pressed("ui_accept") && _Actor.is_on_floor():
 		_Actor._IsJumping = true
@@ -16,8 +17,4 @@ func process(delta):
 		return
 	else:
 		_Actor._CurrSpeed.x = lerp(_Actor._CurrSpeed.x, 0, _Actor._Deaccel)
-	
-	if Input.is_action_just_pressed("attack") && _Actor.is_on_floor():
-		_Machine.changeState("Attack")
-		return
 

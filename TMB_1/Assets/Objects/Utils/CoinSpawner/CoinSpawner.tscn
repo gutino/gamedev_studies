@@ -5,14 +5,15 @@
 
 [node name="CoinSpawner" type="Node2D"]
 script = ExtResource( 1 )
+_Formation = 2
 
 [node name="Coin" parent="." instance=ExtResource( 2 )]
 
 [node name="Coin2" parent="." instance=ExtResource( 2 )]
-position = Vector2( 0, -24 )
+position = Vector2( 16, 0 )
 
 [node name="Coin3" parent="." instance=ExtResource( 2 )]
-position = Vector2( 24, -24 )
+position = Vector2( 32, 0 )
 
 [node name="Coin4" parent="." instance=ExtResource( 2 )]
-position = Vector2( 24, 0 )
+position = Vector2( 48, 0 )
