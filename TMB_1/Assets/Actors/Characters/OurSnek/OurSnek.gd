@@ -12,9 +12,15 @@ var PlayerPosition := Vector2()
 var PlayerNode
 
 
-func OnBodyEntered(body):
-	if body.has_method("OnDamage"):
-		body.OnDamage()
+#func OnBodyEntered(body):
+#	if body.has_method("OnDamage"):
+#		body.OnDamage()
+
+func CheckCollisions():
+	for i in get_slide_count():
+		var collision = get_slide_collision(i)
+		if collision.collider.has_method("OnDamage"):
+			collision.collider.OnDamage()
 	
 func ChangeDirection() -> void:
 	GoingRight = !GoingRight
@@ -26,11 +32,13 @@ func ChangeDirection() -> void:
 		CurrVelocity = Vector2(-HorizontalAccel, VerticalAccel)
 	
 func _physics_process(delta):
-	self.move_and_slide(CurrVelocity)
-	
 	CurrPos = get_position()
 	if CurrPos.x > RightLimit || CurrPos.x < LeftLimit:
 		ChangeDirection()
+	
+	self.move_and_slide(CurrVelocity)
+	CheckCollisions()
+
 		
 func PlayerOnArea() -> bool:
 	PlayerPosition = PlayerNode.get_position()
