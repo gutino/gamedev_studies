@@ -11,10 +11,8 @@ var GoingRight := true
 var PlayerPosition := Vector2()
 var PlayerNode
 
-
-#func OnBodyEntered(body):
-#	if body.has_method("OnDamage"):
-#		body.OnDamage()
+func OnDamage():
+	self.queue_free()
 
 func CheckCollisions():
 	for i in get_slide_count():
@@ -38,7 +36,6 @@ func _physics_process(delta):
 	
 	self.move_and_slide(CurrVelocity)
 	CheckCollisions()
-
 		
 func PlayerOnArea() -> bool:
 	PlayerPosition = PlayerNode.get_position()
@@ -49,6 +46,6 @@ func _process(delta):
 		if ((PlayerPosition.x > CurrPos.x && !GoingRight) 
 			|| (PlayerPosition.x < CurrPos.x && GoingRight)):
 			ChangeDirection()
-			
+
 func _ready():
 	PlayerNode = get_parent().get_node("OurGuy")
