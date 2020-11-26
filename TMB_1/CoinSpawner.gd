@@ -33,8 +33,9 @@ func UpdateFormation()->void:
 
 func set_Formation(new_formation:int):
 	_Formation = new_formation
-	if(Engine.editor_hint):
+	if (Engine.editor_hint):
 		self.UpdateFormation()
 
 func _ready():
-	UpdateFormation()
+	if (!Engine.editor_hint):
+		self.UpdateFormation()

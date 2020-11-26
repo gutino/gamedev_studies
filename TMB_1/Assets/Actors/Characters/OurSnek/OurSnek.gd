@@ -1,51 +1,53 @@
 extends KinematicBody2D
 
-export(int) var RightLimit := 111
-export(int) var LeftLimit := -31
-export(float) var HorizontalAccel := 5.0
-export(float) var VerticalAccel := 5.0
+export(float) var PatrolSpeed := 10.0
+export(float) var GravitySpeed := 9.0
+export(float) var ChasingFactor := 3.0
 
-var CurrPos := Vector2()
+var IsChasing := false
 var CurrVelocity := Vector2(5, 5)
 var GoingRight := true
-var PlayerPosition := Vector2()
-var PlayerNode
+var ChasedNode
 
 func OnDamage():
 	self.queue_free()
 
 func CheckCollisions():
-	for i in get_slide_count():
-		var collision = get_slide_collision(i)
+	for i in self.get_slide_count():
+		var collision = self.get_slide_collision(i)
 		if collision.collider.has_method("OnDamage"):
 			collision.collider.OnDamage()
 	
 func ChangeDirection() -> void:
 	GoingRight = !GoingRight
 	$AnimatedSprite.scale.x *= -1
-	
-	if GoingRight:
-		CurrVelocity = Vector2(HorizontalAccel, VerticalAccel)
-	else:
-		CurrVelocity = Vector2(-HorizontalAccel, VerticalAccel)
+	$EdgeChecker.position.x *= -1
 	
 func _physics_process(delta):
-	CurrPos = get_position()
-	if CurrPos.x > RightLimit || CurrPos.x < LeftLimit:
+	if !$EdgeChecker.is_colliding():
+		IsChasing = false
 		ChangeDirection()
+	
+	if GoingRight:
+		CurrVelocity = Vector2(PatrolSpeed, GravitySpeed)
+	else:
+		CurrVelocity = Vector2(-PatrolSpeed, GravitySpeed)
+	
+	if IsChasing:
+		CurrVelocity.x *= ChasingFactor
 	
 	self.move_and_slide(CurrVelocity)
 	CheckCollisions()
-		
-func PlayerOnArea() -> bool:
-	PlayerPosition = PlayerNode.get_position()
-	return PlayerPosition.x <= RightLimit && PlayerPosition.x >= LeftLimit
-
+	
 func _process(delta):
-	if PlayerOnArea():
-		if ((PlayerPosition.x > CurrPos.x && !GoingRight) 
-			|| (PlayerPosition.x < CurrPos.x && GoingRight)):
+	if IsChasing:
+		if ((ChasedNode.position.x > position.x && !GoingRight) 
+			|| (ChasedNode.position.x < position.x && GoingRight)):
 			ChangeDirection()
 
-func _ready():
-	PlayerNode = get_parent().get_node("OurGuy")
+func startChasing(body):
+	IsChasing = true
+	ChasedNode = body
+
+func stopChasing(body):
+	IsChasing = false
