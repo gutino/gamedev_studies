@@ -1,7 +1,6 @@
 extends KinematicBody2D
 
 export(float) var PatrolSpeed := 10.0
-export(float) var GravitySpeed := 9.0
 export(float) var ChasingFactor := 3.0
 
 var IsChasing := false
@@ -24,20 +23,21 @@ func ChangeDirection() -> void:
 	$EdgeChecker.position.x *= -1
 	
 func _physics_process(delta):
+	CheckCollisions()
+	
 	if !$EdgeChecker.is_colliding():
 		IsChasing = false
 		ChangeDirection()
 	
 	if GoingRight:
-		CurrVelocity = Vector2(PatrolSpeed, GravitySpeed)
+		CurrVelocity = Vector2(PatrolSpeed, GlobalVars.GravitySpeed)
 	else:
-		CurrVelocity = Vector2(-PatrolSpeed, GravitySpeed)
+		CurrVelocity = Vector2(-PatrolSpeed, GlobalVars.GravitySpeed)
 	
 	if IsChasing:
 		CurrVelocity.x *= ChasingFactor
-	
+		
 	self.move_and_slide(CurrVelocity)
-	CheckCollisions()
 	
 func _process(delta):
 	if IsChasing:

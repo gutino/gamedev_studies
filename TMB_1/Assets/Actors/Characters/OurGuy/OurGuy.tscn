@@ -12,7 +12,6 @@ script/source = "extends KinematicBody2D
 const _Sword = preload(\"OurSword.tscn\")
 
 export var _HorizontalVelocity := 80.0
-export var _GravityVelocity := 120
 export var _JumpForce := 180
 export var _JumpingDuration := 0.3
 export var _DiagonalFactor := 1.3
@@ -21,7 +20,6 @@ export var _Deaccel := 0.2
 export var _SprintVelocity := 130.0
 
 var _CurrSpeed := Vector2(0, 0)
-var _GravAcceleration := 0.25
 var _JumpDeaccel := 0.05
 var _IsJumping := false
 var _GoingLeft := false
@@ -42,7 +40,11 @@ func getFinalYSpeed() -> void:
 		if self._IsJumping:
 			self._CurrSpeed.y = lerp(self._CurrSpeed.y, 0, self._JumpDeaccel)
 		else:
-			self._CurrSpeed.y = lerp(self._CurrSpeed.y, self._GravityVelocity, self._GravAcceleration)
+			self._CurrSpeed.y = lerp(
+				self._CurrSpeed.y,
+				GlobalVars.GravitySpeed,
+				GlobalVars.GravityAccel
+			)
 
 func _process(delta):
 	if self._IsJumping:

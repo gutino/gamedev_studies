@@ -42,6 +42,10 @@ config/name="TMB_1"
 run/main_scene="res://Assets/Levels/Level1/Level1.tscn"
 config/icon="res://icon.png"
 
+[autoload]
+
+GlobalVars="*res://Assets/Scripts/Singletons/GlobalVars.gd"
+
 [display]
 
 window/size/width=160
