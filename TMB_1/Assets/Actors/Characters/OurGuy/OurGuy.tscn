@@ -11,6 +11,7 @@ script/source = "extends KinematicBody2D
 
 const _Sword = preload(\"OurSword.tscn\")
 
+export var _life := 3
 export var _HorizontalVelocity := 80.0
 export var _JumpForce := 180
 export var _JumpingDuration := 0.3
@@ -75,7 +76,11 @@ func DisengageAttack():
 	self._Attacking = false
 
 func OnDamage():
-	self.get_tree().reload_current_scene()
+	_life -= 1
+	print(\"AAAI AI\")
+	if _life < 1:
+		self.get_tree().reload_current_scene()
+		print(\"=== Game Over ===\")
 
 func _on_JumpTimer_timeout():
 	_IsJumping = false
