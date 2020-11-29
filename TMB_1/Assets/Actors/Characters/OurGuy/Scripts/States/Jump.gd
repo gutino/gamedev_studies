@@ -6,7 +6,6 @@ func enter():
 	_Actor._CurrSpeed.y = -_Actor._JumpForce
 
 func process(delta):
-	
 	if (Input.is_action_just_released("ui_accept") || !_Actor._IsJumping):
 		self._Machine.changeState("Idle")
 		
