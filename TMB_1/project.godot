@@ -45,6 +45,7 @@ config/icon="res://icon.png"
 [autoload]
 
 GlobalVars="*res://Assets/Scripts/Singletons/GlobalVars.gd"
+OurGuyVars="*res://Assets/Scripts/Singletons/OurGuyVars.gd"
 
 [display]
 

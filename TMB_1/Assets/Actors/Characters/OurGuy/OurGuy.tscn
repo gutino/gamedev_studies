@@ -1,10 +1,11 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://Assets/Actors/Characters/OurGuy/OurGuy.png" type="Texture" id=1]
 [ext_resource path="res://Assets/Actors/Characters/OurGuy/Scripts/OurGuyStateMachine.gd" type="Script" id=2]
 [ext_resource path="res://Assets/Actors/Characters/OurGuy/Scripts/States/Idle.gd" type="Script" id=3]
 [ext_resource path="res://Assets/Actors/Characters/OurGuy/Scripts/States/Move.gd" type="Script" id=4]
 [ext_resource path="res://Assets/Actors/Characters/OurGuy/Scripts/States/Jump.gd" type="Script" id=5]
+[ext_resource path="res://Assets/GUI/GUI.tscn" type="PackedScene" id=6]
 
 [sub_resource type="GDScript" id=1]
 script/source = "extends KinematicBody2D
@@ -27,6 +28,8 @@ var _IsJumping := false
 var _GoingLeft := false
 var _Attacking := false
 var _TakingDmg := false
+
+signal CoinPickedUp()
 
 func calcSpriteSide() -> void:
 	if _CurrSpeed.x > 0 && _GoingLeft:
@@ -77,15 +80,16 @@ func EngageAttack():
 func DisengageAttack():
 	self._Attacking = false
 
-func OnDamage():
+func OnDamage(Damage : int):
 	if !_TakingDmg:
 		_TakingDmg = true
-		_life -= 1
+		_life -= Damage
 		self.get_node(\"DmgTimer\").start(_DmgDuration)
 		
 		print(\"AAAI AI\")
 		if _life < 1:
 			self.get_tree().reload_current_scene()
+			OurGuyVars.Death()
 			print(\"=== Game Over ===\")
 
 func _on_DmgTimer_timeout():
@@ -95,7 +99,8 @@ func _on_JumpTimer_timeout():
 	_IsJumping = false
 
 func _on_Coin_pickedUp():
-	print(\"Peguei!!\")
+	OurGuyVars.Coins += 1
+	emit_signal(\"CoinPickedUp\")
 "
 
 [sub_resource type="RectangleShape2D" id=2]
@@ -134,8 +139,16 @@ one_shot = true
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2( 0, -15 )
 current = true
+process_mode = 0
+drag_margin_h_enabled = true
+drag_margin_v_enabled = true
 
 [node name="SwordSpawn" type="Node2D" parent="."]
 position = Vector2( 0, -16 )
+
+[node name="GUI" parent="." instance=ExtResource( 6 )]
+offset = Vector2( 4, 4 )
+transform = Transform2D( 1, 0, 0, 1, 4, 4 )
+[connection signal="CoinPickedUp" from="." to="GUI" method="_onCoinPickedUp"]
 [connection signal="timeout" from="JumpTimer" to="." method="_on_JumpTimer_timeout"]
 [connection signal="timeout" from="DmgTimer" to="." method="_on_DmgTimer_timeout"]

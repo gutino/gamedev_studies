@@ -2,6 +2,7 @@ extends KinematicBody2D
 
 export(float) var PatrolSpeed := 10.0
 export(float) var ChasingFactor := 3.0
+export(int) var Damage := 1
 
 var IsChasing := false
 var CurrVelocity := Vector2(5, 5)
@@ -15,7 +16,7 @@ func CheckCollisions():
 	for i in self.get_slide_count():
 		var collision = self.get_slide_collision(i)
 		if collision.collider.has_method("OnDamage"):
-			collision.collider.OnDamage()
+			collision.collider.OnDamage(Damage)
 	
 func ChangeDirection() -> void:
 	GoingRight = !GoingRight
