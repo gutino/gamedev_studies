@@ -1,25 +1,9 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://Assets/Actors/PickUps/Coin/Coin.png" type="Texture" id=1]
 [ext_resource path="res://Assets/GUI/default.tres" type="Theme" id=2]
-[ext_resource path="res://Assets/GUI/Health/Health.png" type="Texture" id=3]
+[ext_resource path="res://Assets/GUI/Health/Heart.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Assets/GUI/GUI.gd" type="Script" id=4]
-
-[sub_resource type="AtlasTexture" id=1]
-atlas = ExtResource( 3 )
-region = Rect2( 0, 0, 8, 8 )
-
-[sub_resource type="AtlasTexture" id=2]
-atlas = ExtResource( 3 )
-region = Rect2( 8, 0, 8, 8 )
-
-[sub_resource type="SpriteFrames" id=3]
-animations = [ {
-"frames": [ SubResource( 1 ), SubResource( 2 ) ],
-"loop": true,
-"name": "default",
-"speed": 5.0
-} ]
 
 [node name="GUI" type="CanvasLayer"]
 script = ExtResource( 4 )
@@ -39,7 +23,7 @@ __meta__ = {
 }
 
 [node name="Health" type="HBoxContainer" parent="Container/Icons"]
-margin_right = 26.0
+margin_right = 8.0
 margin_bottom = 8.0
 size_flags_horizontal = 2
 custom_constants/separation = 1
@@ -47,43 +31,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Heart1" type="CenterContainer" parent="Container/Icons/Health"]
-margin_right = 8.0
-margin_bottom = 8.0
-rect_min_size = Vector2( 8, 8 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="AnimatedSprite" type="AnimatedSprite" parent="Container/Icons/Health/Heart1"]
-frames = SubResource( 3 )
-offset = Vector2( 4, 4 )
-
-[node name="Heart2" type="CenterContainer" parent="Container/Icons/Health"]
-margin_left = 9.0
-margin_right = 17.0
-margin_bottom = 8.0
-rect_min_size = Vector2( 8, 8 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="AnimatedSprite" type="AnimatedSprite" parent="Container/Icons/Health/Heart2"]
-frames = SubResource( 3 )
-offset = Vector2( 4, 4 )
-
-[node name="Heart3" type="CenterContainer" parent="Container/Icons/Health"]
-margin_left = 18.0
-margin_right = 26.0
-margin_bottom = 8.0
-rect_min_size = Vector2( 8, 8 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="AnimatedSprite" type="AnimatedSprite" parent="Container/Icons/Health/Heart3"]
-frames = SubResource( 3 )
-offset = Vector2( 4, 4 )
+[node name="Heart" parent="Container/Icons/Health" instance=ExtResource( 3 )]
 
 [node name="CoinCounter" type="HBoxContainer" parent="Container/Icons"]
 margin_top = 12.0

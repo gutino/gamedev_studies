@@ -28,6 +28,7 @@ var _GoingLeft := false
 var _Attacking := false
 var _TakingDmg := false
 
+signal OnDamaged()
 signal CoinPickedUp()
 
 func calcSpriteSide() -> void:
@@ -90,6 +91,8 @@ func OnDamage(Damage : int):
 			self.get_tree().reload_current_scene()
 			OurGuyVars.Death()
 			print(\"=== Game Over ===\")
+		
+		emit_signal(\"OnDamaged\")
 
 func _on_DmgTimer_timeout():
 	_TakingDmg = false
@@ -100,6 +103,10 @@ func _on_JumpTimer_timeout():
 func _on_Coin_pickedUp():
 	OurGuyVars.Coins += 1
 	emit_signal(\"CoinPickedUp\")
+
+func _on_ExtraHeart_pickedUp(var qty : int):
+	OurGuyVars.Health += 1
+	emit_signal(\"OnDamaged\")
 "
 
 [sub_resource type="RectangleShape2D" id=2]
@@ -149,5 +156,6 @@ position = Vector2( 0, -16 )
 offset = Vector2( 4, 4 )
 transform = Transform2D( 1, 0, 0, 1, 4, 4 )
 [connection signal="CoinPickedUp" from="." to="GUI" method="_onCoinPickedUp"]
+[connection signal="OnDamaged" from="." to="GUI" method="_on_OurGuy_OnDamaged"]
 [connection signal="timeout" from="JumpTimer" to="." method="_on_JumpTimer_timeout"]
 [connection signal="timeout" from="DmgTimer" to="." method="_on_DmgTimer_timeout"]
