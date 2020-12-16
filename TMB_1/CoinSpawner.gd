@@ -1,4 +1,4 @@
-tool
+
 extends Node2D 
 
 enum eFormation { BigSquare, SmlSquare, HorLine, VertLine, Triangle1 }
