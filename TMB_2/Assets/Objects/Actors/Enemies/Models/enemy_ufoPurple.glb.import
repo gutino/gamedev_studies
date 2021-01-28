@@ -2,12 +2,12 @@
 
 importer="scene"
 type="PackedScene"
-path="res://.import/enemy_ufoGreenWeapon.glb-931974ed7ec31d2f974f7064a90dd9bc.scn"
+path="res://.import/enemy_ufoPurple.glb-8586382f234c811e9b560ff862c362c6.scn"
 
 [deps]
 
-source_file="res://Assets/Objects/Actors/Enemies/enemy_ufoGreenWeapon.glb"
-dest_files=[ "res://.import/enemy_ufoGreenWeapon.glb-931974ed7ec31d2f974f7064a90dd9bc.scn" ]
+source_file="res://Assets/Objects/Actors/Enemies/Models/enemy_ufoPurple.glb"
+dest_files=[ "res://.import/enemy_ufoPurple.glb-8586382f234c811e9b560ff862c362c6.scn" ]
 
 [params]
 

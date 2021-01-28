@@ -1,8 +1,14 @@
 using System.Collections.Generic;
 
 namespace TowerDefense {
-  static public class TileDict {
-    private static readonly Dictionary<string, MapTile> Dict = new Dictionary<string, MapTile>(){
+  public static class TileDict {
+    private static readonly Dictionary<string, MapTile> Dict = new Dictionary<string, MapTile>() {
+
+      //Spawn
+      { "tile_spawnRound" , new SpawnTile() },
+
+      //End
+      { "tile_endRound" , new GoalTile() },
 
       //Buildables
       { "tile" , new BuildableTile() },
@@ -19,7 +25,7 @@ namespace TowerDefense {
       { "tile_TSplit"           , new PathTile( new Exit[] { Exit.RIGHT, Exit.LEFT } ) }
     };
     
-    public static MapTile GetTile(string tileName) => Dict[tileName];
+    public static MapTile GetTile(string tileName){ return Dict[tileName]; }
 
   }
 }

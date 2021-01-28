@@ -1,7 +1,9 @@
 using Godot;
 
 namespace TowerDefense {
-  public class GridMapTest : GridMap {
+  public class DefenseGridMap : GridMap {
+
+    public Vector3Int SpawnPoint {get;set;}
 
     private float GetRotationFromOrientation (int OrthogonalAngle){
 
@@ -21,6 +23,8 @@ namespace TowerDefense {
 
     public override void _Ready(){
 
+      ((EnemySpawner)GetNode("/root/EnemySpawner")).SetOwnerMap(this);
+
       foreach (Vector3 i in this.GetUsedCells()){
         
         var cellPos = new Vector3Int(i);
@@ -28,7 +32,10 @@ namespace TowerDefense {
         var tileIndex = this.GetCellItem( cellPos.x, cellPos.y, cellPos.z);
         var tileName = this.MeshLibrary.GetItemName(tileIndex);
 
+
         MapTile info = TileDict.GetTile(tileName);
+
+        if (info.Type == TileType.SPAWN) this.SpawnPoint = new Vector3Int(i);
 
         if ( info.Type == TileType.PATH ){
           this.SetCellItem(
@@ -38,6 +45,7 @@ namespace TowerDefense {
           );
         }
       }
+
     }
 
     private int GetOrientation(Exit[] exits, int orientation){
@@ -48,17 +56,17 @@ namespace TowerDefense {
 
       switch (direction){
 
-          case Exit.FORWARD:
-            basis = Basis.Identity; break;
+        case Exit.FORWARD:
+          basis = Basis.Identity; break;
 
-          case Exit.RIGHT:
-            basis = new Basis(Vector3.Back, Vector3.Up, Vector3.Left); break;
-          case Exit.BACK:
-            basis = new Basis(Vector3.Left, Vector3.Up, Vector3.Forward); break;
-          case Exit.LEFT:
-            basis = new Basis(Vector3.Forward, Vector3.Up, Vector3.Right); break;
-          default:
-            basis = Basis.Identity; break;
+        case Exit.RIGHT:
+          basis = new Basis(Vector3.Back, Vector3.Up, Vector3.Left); break;
+        case Exit.BACK:
+          basis = new Basis(Vector3.Left, Vector3.Up, Vector3.Forward); break;
+        case Exit.LEFT:
+          basis = new Basis(Vector3.Forward, Vector3.Up, Vector3.Right); break;
+        default:
+          basis = Basis.Identity; break;
       }
       
       basis = basis.Rotated(Vector3.Up, GetRotationFromOrientation(orientation));

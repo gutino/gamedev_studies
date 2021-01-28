@@ -27,4 +27,18 @@ namespace TowerDefense {
     }
   }
 
+  public class SpawnTile : MapTile {
+    public SpawnTile(){
+      this.Type = TileType.SPAWN;
+      Exits = new Exit[] { Exit.FORWARD };
+    }
+  }
+
+  public class GoalTile : MapTile {
+    public GoalTile(){
+      this.Type = TileType.GOAL;
+      Exits = new Exit[] { Exit.FORWARD };
+    }
+  }
+  
 }

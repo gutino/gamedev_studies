@@ -19,6 +19,10 @@ config/name="TowerDefense"
 run/main_scene="res://Assets/Levels/Level1/Level1.tscn"
 config/icon="res://icon.png"
 
+[autoload]
+
+EnemySpawner="*res://Assets/Scripts/AutoLoad/EnemySpawner.cs"
+
 [display]
 
 window/size/resizable=false

@@ -13,6 +13,12 @@ namespace TowerDefense {
       this.y = (int)vector3.y;
       this.z = (int)vector3.z;
     }
+
+    public Vector3Int(int x, int y, int z){
+      this.x = x;
+      this.y = y;
+      this.z = z;
+    }
   }
 
 }
