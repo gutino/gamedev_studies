@@ -19,6 +19,11 @@ config/name="TowerDefense"
 run/main_scene="res://Assets/Levels/Level1/Level1.tscn"
 config/icon="res://icon.png"
 
+[display]
+
+window/size/resizable=false
+
 [rendering]
 
+quality/filters/msaa=4
 environment/default_environment="res://default_env.tres"
