@@ -37,13 +37,13 @@ namespace TowerDefense {
 
         if (info.Type == TileType.SPAWN) this.SpawnPoint = new Vector3Int(i);
 
-        if ( info.Type == TileType.PATH ){
-          this.SetCellItem(
-            cellPos.x, 1,  cellPos.z,
-            0,
-            GetOrientation( info.Exits, this.GetCellItemOrientation( cellPos.x, cellPos.y, cellPos.z ))
-          );
-        }
+        // if ( info.Type == TileType.PATH ){
+        //   this.SetCellItem(
+        //     cellPos.x, 1,  cellPos.z,
+        //     0,
+        //     GetOrientation( info.Exits, this.GetCellItemOrientation( cellPos.x, cellPos.y, cellPos.z ))
+        //   );
+        // }
       }
 
     }
