@@ -18,7 +18,7 @@ namespace TowerDefense {
 	[Export]
 	public float MovSpeed { get; set; } = 0.5f;
 	[Export]
-	public float RotSpeed { get; set; } = 0.1f;
+	public float RotDur { get; set; } = 0.1f;
 	#endregion
 
 	#region Private Properties
@@ -40,7 +40,7 @@ namespace TowerDefense {
 	  return this;
 	}
   
-	public void TweenActionCompleted(Godot.Object obj, NodePath key){
+	public void TweenActionCompleted(Godot.Object _, NodePath key){
 	  
 	  if (key == ":translation"){
 		this.CurrGridPosition = new Vector3Int(this.CurrGridMap.WorldToMap(this.GlobalTransform.origin));
@@ -66,7 +66,7 @@ namespace TowerDefense {
 		  "rotation_degrees:y",
 		  this.RotationDegrees.y,
 		  this.RotationDegrees.y + (exit == Exit.LEFT ? 90f : -90f),
-		  this.RotSpeed
+		  this.RotDur
 		);
 		this.Tween.Start();
 	  }

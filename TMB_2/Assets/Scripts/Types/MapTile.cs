@@ -37,7 +37,7 @@ namespace TowerDefense {
   public class GoalTile : MapTile {
     public GoalTile(){
       this.Type = TileType.GOAL;
-      Exits = new Exit[] { Exit.FORWARD };
+      Exits = new Exit[] {};
     }
   }
   
