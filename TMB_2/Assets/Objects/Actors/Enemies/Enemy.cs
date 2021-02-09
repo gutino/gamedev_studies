@@ -4,14 +4,10 @@ using System;
 namespace TowerDefense {
   public abstract class Enemy : Spatial {
 
-	#region Signals
-	[Signal]
-	delegate void EndReached();
-	#endregion
 
 	#region Node Childs
-	private Tween Tween {get;set;}
-	private AnimationPlayer AnimPlayer {get;set;}
+	private Tween Tween {get{return this.GetNode<Tween>("Tween");}}
+	private AnimationPlayer AnimPlayer {get{return this.GetNode<AnimationPlayer>("AnimationPlayer");}}
 	#endregion
 
 	#region Exported Properties
@@ -28,14 +24,11 @@ namespace TowerDefense {
 
 	public Enemy Init(DefenseGridMap currGridMap) {
 
-	  this.Tween = this.GetNode<Tween>("Tween");
 	  this.Tween.Connect( "tween_completed", this, nameof(this.TweenActionCompleted) );
-
-	  this.AnimPlayer = this.GetNode<AnimationPlayer>("AnimationPlayer");
 
 	  this.CurrGridMap = currGridMap;
 	  this.CurrGridPosition = currGridMap.SpawnPoint;
-	  this.Transform = this.Transform.Translated( currGridMap.MapToWorld( CurrGridPosition.x, CurrGridPosition.y, CurrGridPosition.z ) );
+	  this.Transform = this.Transform.Translated( currGridMap.MapToWorld( CurrGridPosition.X, CurrGridPosition.Y, CurrGridPosition.Z ) );
 
 	  return this;
 	}
@@ -88,7 +81,7 @@ namespace TowerDefense {
 	}
 
 	private MapTile GetTileInfo(Vector3Int tile){
-	  var tileIndex = this.CurrGridMap.GetCellItem( tile.x, tile.y, tile.z);
+	  var tileIndex = this.CurrGridMap.GetCellItem( tile.X, tile.Y, tile.Z);
 	  var tileName = this.CurrGridMap.MeshLibrary.GetItemName(tileIndex);
 	  return TileDict.GetTile(tileName);
 	}
