@@ -29,7 +29,7 @@ namespace TowerDefense {
 		
 		var cellPos = new Vector3Int(i);
 
-		var tileIndex = this.GetCellItem( cellPos.x, cellPos.y, cellPos.z);
+		var tileIndex = this.GetCellItem( cellPos.X, cellPos.Y, cellPos.Z);
 		var tileName = this.MeshLibrary.GetItemName(tileIndex);
 
 
