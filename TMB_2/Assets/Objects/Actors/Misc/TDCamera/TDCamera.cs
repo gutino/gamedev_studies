@@ -17,17 +17,17 @@ namespace TowerDefense{
 		#endregion
 		
 		#region Privates
-    private bool IsRotating;
+	private bool IsRotating;
 		private Camera ChildCamera { get{ return this.GetNode<Camera>("Camera"); } }
 
 		private Vector3 CamInitLoc {get;set;}
-    #endregion
+	#endregion
 
-    public override void _Ready(){
-      this.ChildCamera.LookAt(this.GlobalTransform.origin, Vector3.Up);
+	public override void _Ready(){
+	  this.ChildCamera.LookAt(this.GlobalTransform.origin, Vector3.Up);
 			this.CamInitLoc = this.ChildCamera.Transform.origin;
-    }
-    public override void _Input(InputEvent @event){
+	}
+	public override void _Input(InputEvent @event){
 			if (@event is InputEventMouseMotion && this.IsRotating){
 				this.RotateY((MouseSensitivity * (@event as InputEventMouseMotion)?.Relative.x).Value);
 			}

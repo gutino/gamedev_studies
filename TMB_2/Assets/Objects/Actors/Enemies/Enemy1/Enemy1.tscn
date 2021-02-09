@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://Assets/Objects/Actors/Enemies/Models/purple.material" type="Material" id=1]
 [ext_resource path="res://Assets/Objects/Actors/Enemies/Models/stoneDark.material" type="Material" id=2]
@@ -58,6 +58,10 @@ surfaces/0 = {
 "skeleton_aabb": [  ],
 "vertex_count": 768
 }
+
+[sub_resource type="CylinderShape" id=5]
+radius = 0.5
+height = 0.5
 
 [sub_resource type="Animation" id=3]
 length = 4.0
@@ -140,11 +144,13 @@ tracks/3/keys = {
 } ]
 }
 
-[node name="Enemy1" type="Spatial"]
+[node name="Enemy1" type="Spatial" groups=[
+"Enemies",
+]]
 script = ExtResource( 4 )
 
 [node name="enemy_ufoPurpleWeapon" type="MeshInstance" parent="."]
-transform = Transform( -9.77524e-08, 0, 0.6, 0, 0.6, 0, -0.6, 0, -9.77524e-08, 0, 0.45, 0 )
+transform = Transform( -9.75687e-08, -5.99079e-09, 0.6, -0.0367712, 0.598872, 0, -0.598872, -0.0367712, -9.77524e-08, 0, 0.520897, 0 )
 mesh = SubResource( 1 )
 material/0 = null
 material/1 = null
@@ -154,6 +160,13 @@ material/2 = null
 transform = Transform( 0.546, 0, 0, -1.11022e-16, -0.00250139, 0.545994, 0, -0.545994, -0.0025014, 2.33147e-15, 0.484867, 0.0130602 )
 mesh = SubResource( 2 )
 material/0 = null
+
+[node name="StaticBody" type="StaticBody" parent="enemy_ufoPurpleWeapon"]
+transform = Transform( -2.71534e-07, 0, -1.66667, 0, 1.66667, 0, 1.66667, 0, -2.71534e-07, 0, -0.75, 0 )
+
+[node name="CollisionShape" type="CollisionShape" parent="enemy_ufoPurpleWeapon/StaticBody"]
+transform = Transform( -9.77524e-08, 0, 0.6, 0, 0.6, 0, -0.6, 0, -9.77524e-08, 0, 0.6, 0 )
+shape = SubResource( 5 )
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 autoplay = "Default"
