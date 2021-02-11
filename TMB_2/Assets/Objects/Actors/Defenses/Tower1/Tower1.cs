@@ -5,4 +5,3 @@ namespace TowerDefense {
   public class Tower1 : Tower { }
 
 }
-

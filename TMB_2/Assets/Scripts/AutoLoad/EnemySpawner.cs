@@ -1,30 +1,34 @@
 using Godot;
 
-namespace TowerDefense {
-  public class EnemySpawner : Node {
+namespace TowerDefense{
+    public class EnemySpawner : Node{
 
-    public DefenseGridMap OwnerMap { get;set;}
+        public DefenseGridMap OwnerMap { get; set; }
+        private Timer SpawnDelay { get; set; } = new Timer();
 
-    private void SpawnEnemy(){
+        public void _on_Timer_Timeout(){
+            this.SpawnEnemy();
+        }
 
-      Enemy newEnemy = GD.Load<PackedScene>("res://Assets/Objects/Actors/Enemies/Enemy1/Enemy1.tscn").Instance() as Enemy;
+        private void SpawnEnemy(){
 
-      newEnemy.Init(this.OwnerMap);
+            Enemy newEnemy = GD.Load<PackedScene>("res://Assets/Objects/Actors/Enemies/Enemy1/Enemy1.tscn").Instance() as Enemy;
+            newEnemy.Init(this.OwnerMap);
+            this.GetTree().Root.AddChild(newEnemy);
+            newEnemy.MoveToNextTile();
+        }
 
-      this.GetTree().Root.AddChild( newEnemy );
+        public void MapReadyHandler(){
+            this.GetTree().Root.AddChild(SpawnDelay);
+            SpawnDelay.OneShot = false;
+            SpawnDelay.Connect("timeout", this, nameof(_on_Timer_Timeout));
+            this.SpawnEnemy();
+            this.SpawnDelay.Start(1.0f);
+        }
 
-      newEnemy.MoveToNextTile();
+        public void SetOwnerMap(DefenseGridMap value){
+            this.OwnerMap = value;
+            this.GetTree().Root.Connect("ready", this, nameof(this.MapReadyHandler));
+        }
     }
-
-    public void MapReadyHandler(){
-      this.SpawnEnemy();
-    }
-
-    public void SetOwnerMap(DefenseGridMap value){
-      this.OwnerMap = value;
-      this.GetTree().Root.Connect( "ready", this, nameof(this.MapReadyHandler) );
-    }
-
-  }
-
 }

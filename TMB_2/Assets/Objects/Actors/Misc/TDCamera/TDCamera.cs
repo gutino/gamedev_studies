@@ -49,7 +49,7 @@ namespace TowerDefense{
 			var currCamTransform = this.ChildCamera.Transform;
 			var relativeY = this.ChildCamera.GlobalTransform.origin.y - this.GlobalTransform.origin.y;
 
-			GD.Print(relativeY);
+			//GD.Print(relativeY);
 
 
 			if (Input.IsActionJustReleased("ui_scroll_up") && relativeY > (this.MinDistance + this.GlobalTransform.origin.y))
