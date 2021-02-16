@@ -3,8 +3,10 @@ using Godot;
 namespace TowerDefense{
     public class EnemySpawner : Node{
 
+        [Export]
+        public float SpawnDelay { get; set; } = 2.0f;
         public DefenseGridMap OwnerMap { get; set; }
-        private Timer SpawnDelay { get; set; } = new Timer();
+        private Timer SpawnTimer { get; set; } = new Timer();
 
         public void _on_Timer_Timeout(){
             this.SpawnEnemy();
@@ -19,11 +21,11 @@ namespace TowerDefense{
         }
 
         public void MapReadyHandler(){
-            this.GetTree().Root.AddChild(SpawnDelay);
-            SpawnDelay.OneShot = false;
-            SpawnDelay.Connect("timeout", this, nameof(_on_Timer_Timeout));
+            this.GetTree().Root.AddChild(SpawnTimer);
+            SpawnTimer.OneShot = false;
+            SpawnTimer.Connect("timeout", this, nameof(_on_Timer_Timeout));
             this.SpawnEnemy();
-            this.SpawnDelay.Start(1.0f);
+            this.SpawnTimer.Start(SpawnDelay);
         }
 
         public void SetOwnerMap(DefenseGridMap value){

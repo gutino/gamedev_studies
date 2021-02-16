@@ -29,7 +29,7 @@ namespace TowerDefense{
 	}
 	public override void _Input(InputEvent @event){
 			if (@event is InputEventMouseMotion && this.IsRotating){
-				this.RotateY((MouseSensitivity * (@event as InputEventMouseMotion)?.Relative.x).Value);
+				this.RotateY((-MouseSensitivity * (@event as InputEventMouseMotion)?.Relative.x).Value);
 			}
 		}
 		public override void _Process(float delta){
@@ -48,8 +48,6 @@ namespace TowerDefense{
 			#region Camera Zoom
 			var currCamTransform = this.ChildCamera.Transform;
 			var relativeY = this.ChildCamera.GlobalTransform.origin.y - this.GlobalTransform.origin.y;
-
-			//GD.Print(relativeY);
 
 
 			if (Input.IsActionJustReleased("ui_scroll_up") && relativeY > (this.MinDistance + this.GlobalTransform.origin.y))
