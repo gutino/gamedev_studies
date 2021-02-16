@@ -69,11 +69,15 @@ namespace TowerDefense{
         private void Attack(){
             foreach (var enemy in CloseEnemies.ToArray()){
                 if (enemy != null){
-                    LineDrawer.AddLine(this.Transform.origin, enemy.Transform.origin);
+                    this.FireProjectile(enemy);
+                    // LineDrawer.AddLine(this.Transform.origin, enemy.Transform.origin);
                     enemy.TakeDmg(WeaponDmg);
                 }
             }
         }
+
+        // TODO: jogar para interface.
+        public virtual void FireProjectile(Enemy target){}
 
         public void RemoveEnemy(Enemy enemy){
             enemy.Disconnect("EnemyDied", this, nameof(On_Enemy_Death));
