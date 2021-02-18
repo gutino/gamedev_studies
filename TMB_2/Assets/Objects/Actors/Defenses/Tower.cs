@@ -15,6 +15,7 @@ namespace TowerDefense{
         private List<Enemy> CloseEnemies {get;} = new List<Enemy>();
         private readonly LineDrawer3d LineDrawer = new LineDrawer3d();
         private Area RangeArea {get{return this.GetNode<Area>("RangeArea");}}
+        protected Spatial ProjectileSpawner {get{return this.GetNode<Spatial>("ProjectileSpawner");}}
 
         public override void _Ready(){
             this.AddChild(this.LineDrawer);

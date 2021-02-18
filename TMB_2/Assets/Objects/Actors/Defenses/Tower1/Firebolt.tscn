@@ -3,13 +3,14 @@
 [ext_resource path="res://Assets/Objects/Actors/Defenses/Tower1/Firebolt.cs" type="Script" id=1]
 
 [sub_resource type="BoxShape" id=1]
+extents = Vector3( 0.15, 0.15, 0.15 )
 
-[sub_resource type="Gradient" id=7]
+[sub_resource type="Gradient" id=2]
 offsets = PoolRealArray( 0, 0.8 )
 colors = PoolColorArray( 1, 0.72549, 0, 1, 1, 0, 0, 1 )
 
-[sub_resource type="GradientTexture" id=8]
-gradient = SubResource( 7 )
+[sub_resource type="GradientTexture" id=3]
+gradient = SubResource( 2 )
 width = 256
 
 [sub_resource type="Curve" id=4]
@@ -19,26 +20,29 @@ _data = [ Vector2( 0.00503355, 0.155405 ), 0.0, 0.0, 0, 0, Vector2( 0.377517, 0.
 width = 256
 curve = SubResource( 4 )
 
-[sub_resource type="ParticlesMaterial" id=2]
+[sub_resource type="ParticlesMaterial" id=6]
 emission_shape = 1
 emission_sphere_radius = 0.02
 gravity = Vector3( 0, 1, 0 )
 scale_curve = SubResource( 5 )
-color_ramp = SubResource( 8 )
+color_ramp = SubResource( 3 )
 
-[sub_resource type="SpatialMaterial" id=9]
+[sub_resource type="SpatialMaterial" id=7]
 flags_unshaded = true
 vertex_color_use_as_albedo = true
 
-[sub_resource type="SphereMesh" id=6]
-material = SubResource( 9 )
+[sub_resource type="SphereMesh" id=8]
+material = SubResource( 7 )
 radius = 0.05
 height = 0.512
 radial_segments = 10
 rings = 6
 
-[node name="Firebolt" type="StaticBody"]
+[node name="Firebolt" type="Area"]
 script = ExtResource( 1 )
+__meta__ = {
+"_editor_description_": ""
+}
 
 [node name="CollisionShape" type="CollisionShape" parent="."]
 shape = SubResource( 1 )
@@ -48,5 +52,5 @@ disabled = true
 transform = Transform( 1, 0, 0, 0, -1.62921e-07, -1, 0, 1, -1.62921e-07, 0, 0, 0 )
 amount = 24
 lifetime = 1.25
-process_material = SubResource( 2 )
-draw_pass_1 = SubResource( 6 )
+process_material = SubResource( 6 )
+draw_pass_1 = SubResource( 8 )

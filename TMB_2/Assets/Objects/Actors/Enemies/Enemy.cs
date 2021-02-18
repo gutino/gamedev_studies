@@ -11,9 +11,11 @@ namespace TowerDefense{
 
 		#region Exported Properties
 		[Export]
-		public float MovSpeed { get; set; } = 0.5f;
+		public float MovDur { get; set; } = 1.0f;
 		[Export]
 		public float RotDur { get; set; } = 0.1f;
+		[Export]
+		public float Height { get; set; } = 0.45f;
 		[Export]
 		public int HitPoints { get; set; } = 10;
 		#endregion
@@ -31,7 +33,8 @@ namespace TowerDefense{
 			this.CurrGridMap = currGridMap;
 			this.CurrGridPosition = currGridMap.SpawnPoint;
 			this.Transform = this.Transform.Translated(
-				currGridMap.MapToWorld(CurrGridPosition.X, CurrGridPosition.Y, CurrGridPosition.Z)
+				currGridMap.MapToWorld(CurrGridPosition.X, CurrGridPosition.Y, CurrGridPosition.Z) +
+				new Vector3(0f, Height, 0f)
 			);
 
 			return this;
@@ -41,7 +44,9 @@ namespace TowerDefense{
 
 			if (key == ":translation"){
 				this.CurrGridPosition = new Vector3Int(
-					this.CurrGridMap.WorldToMap(this.GlobalTransform.origin)
+					this.CurrGridMap.WorldToMap(
+						this.GlobalTransform.origin - new Vector3(0f, Height, 0f)
+					)
 				);
 				this.MoveToNextTile();
 			}
@@ -79,8 +84,8 @@ namespace TowerDefense{
 				this,
 				"translation",
 				this.Translation,
-				this.Translation + (-this.Transform.basis.x),
-				this.MovSpeed
+				this.Translation - this.Transform.basis.x,
+				this.MovDur
 			);
 			this.Tween.Start();
 		}
