@@ -7,14 +7,10 @@ namespace TowerDefense{
 			"res://Assets/Objects/Actors/Defenses/Tower1/Firebolt.tscn"
 		);
 
-		public override void FireProjectile(Enemy target){
-			var projectile_ = GD.Load<PackedScene>(
-				"res://Assets/Objects/Actors/Defenses/Tower1/Firebolt.tscn"
-			).Instance();
+		public override void FireProjectile(WeakRef target){
+			var projectile = ProjectileScene.Instance() as TowerProjectile;
 
-			var projectile = projectile_ as TowerProjectile;
-
-			projectile.Init(target);
+			projectile.Init( target );
 			this.ProjectileSpawner.AddChild(projectile);
 		}
 	}

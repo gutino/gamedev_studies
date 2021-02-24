@@ -11,7 +11,7 @@ namespace TowerDefense{
 
 		#region Exported Properties
 		[Export]
-		public float MovDur { get; set; } = 1.0f;
+		public float MovDur { get; set; } = 0.8f;
 		[Export]
 		public float RotDur { get; set; } = 0.1f;
 		[Export]

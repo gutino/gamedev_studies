@@ -1,24 +1,45 @@
 using Godot;
+using System;
 
-namespace TowerDefense{
-	public class TowerProjectile : Area{
-		public float Speed { get; } = 5.0f;
-		public Enemy Target { get; set; }
-		public override void _Process(float delta){
-			this.LookAt(Target.GlobalTransform.origin, Vector3.Up);
-			this.Translate(Vector3.Forward * Speed * delta);
+namespace TowerDefense {
+	public class TowerProjectile : Area {
+		[Export]
+		public float Speed { get; set; } = 5.0f;
+		[Export]
+		public int Damage { get; set; } = 1;
+		public WeakRef Target { get; set; }
+
+		public override void _Process(float delta) {
+
+			if (this.Target.GetRef() is Enemy targetRef) {
+				this.LookAt(targetRef.GlobalTransform.origin, this.Transform.basis.y);
+				this.Translate(Vector3.Forward * Speed * delta);
+			} else {
+				this.SelfDestruct();
+			}
+
 		}
-		
-		public TowerProjectile Init(Enemy target){
-			this.Target = target;
+
+		public TowerProjectile Init(WeakRef target) {
 			this.Connect("body_entered", this, nameof(this.On_Enemy_Hit));
+			this.Target = target;
 			return this;
 		}
 
-		private void On_Enemy_Hit(Object body){
-			if ((body as Node).Owner == this.Target){
-				this.QueueFree();
-			} 
+		private void SelfDestruct() {
+			this.QueueFree();
+		}
+
+		public void On_Enemy_Hit(Node body) {
+
+			if (
+				this.Target.GetRef() is Enemy targetRef &&
+				body.Owner is Enemy enemyBody &&
+				enemyBody == targetRef
+			) {
+				targetRef.TakeDmg(this.Damage);
+				this.SelfDestruct();
+			}
 		}
 	}
-} 
+}

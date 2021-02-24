@@ -17,9 +17,8 @@ namespace TowerDefense{
 		#endregion
 		
 		#region Privates
-	private bool IsRotating;
+		private bool IsRotating;
 		private Camera ChildCamera { get{ return this.GetNode<Camera>("Camera"); } }
-
 		private Vector3 CamInitLoc {get;set;}
 	#endregion
 

@@ -1,9 +1,10 @@
 using Godot;
-using System;
+using System.Linq;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 
 namespace TowerDefense{
-    public class Tower : Spatial{
+    public abstract class Tower : Spatial{
 
         [Export]
         public int WeaponDmg {get; set;} = 1;
@@ -12,7 +13,7 @@ namespace TowerDefense{
         public float AttackDelay {get; set;} = 1.0f;
         private Timer AttackTimer {get;} = new Timer();
         private bool Attacking {get; set;} = false;
-        private List<Enemy> CloseEnemies {get;} = new List<Enemy>();
+        private List<WeakRef> CloseEnemies {get;} = new List<WeakRef>();
         private readonly LineDrawer3d LineDrawer = new LineDrawer3d();
         private Area RangeArea {get{return this.GetNode<Area>("RangeArea");}}
         protected Spatial ProjectileSpawner {get{return this.GetNode<Spatial>("ProjectileSpawner");}}
@@ -30,8 +31,7 @@ namespace TowerDefense{
         public void On_Area_Entered(Node body){
             if (body.IsInGroup("Enemies")){
                 Enemy enemy = body.GetOwner<Enemy>();
-                CloseEnemies.Add(enemy);
-                enemy.Connect("EnemyDied", this, nameof(On_Enemy_Death));
+                CloseEnemies.Add( WeakRef(enemy) );
 
                 if (CloseEnemies.Count > 0 && !Attacking){
                     Attacking = true;
@@ -45,15 +45,9 @@ namespace TowerDefense{
             if (body.IsInGroup("Enemies")){
                 Enemy enemy = body.GetOwner<Enemy>();
                 if (enemy != null){
-                    RemoveEnemy(enemy);
+                    RemoveEnemy( WeakRef(enemy) );
                 }
             }
-        }
-
-        public void On_Enemy_Death(Enemy enemy){
-            RemoveEnemy(enemy);
-            // TODO: Colocar lógica de morte apenas dentro do enemy.
-            enemy.QueueFree();
         }
 
         public void On_Attack_Timeout(){
@@ -71,24 +65,21 @@ namespace TowerDefense{
             foreach (var enemy in CloseEnemies.ToArray()){
                 if (enemy != null){
                     this.FireProjectile(enemy);
-                    // LineDrawer.AddLine(this.Transform.origin, enemy.Transform.origin);
-                    enemy.TakeDmg(WeaponDmg);
                 }
             }
         }
 
         // TODO: jogar para interface.
-        public virtual void FireProjectile(Enemy target){}
+        public abstract void FireProjectile(WeakRef target);
 
-        public void RemoveEnemy(Enemy enemy){
-            enemy.Disconnect("EnemyDied", this, nameof(On_Enemy_Death));
-            CloseEnemies.Remove(enemy);
+        public void RemoveEnemy(WeakRef enemy){
+            CloseEnemies.RemoveAll( e => e.GetRef() == enemy.GetRef() );
         }
         
     }
 
     public class LineDrawer3d : ImmediateGeometry{
-        List<Vector3> points = new List<Vector3>();
+        readonly List<Vector3> points = new List<Vector3>();
 
         public void AddLine(Vector3 p1, Vector3 p2){
             points.Add(p1 - this.GlobalTransform.origin + Vector3.Up);
