@@ -17,18 +17,33 @@ namespace TowerDefense{
 		#endregion
 		
 		#region Privates
+		private bool PlacingDefenses = false;
 		private bool IsRotating;
-		private Camera ChildCamera { get{ return this.GetNode<Camera>("Camera"); } }
 		private Vector3 CamInitLoc {get;set;}
-	#endregion
+		private Camera ChildCamera { get{ return this.GetNode<Camera>("Camera"); } }
+		private RayCast ChildRayCast {get{ return this.GetNode<RayCast>("RayCast"); } }
+		private DefenseGridMap OwnerMap {get{ return this.GetNode<EnemySpawner>("/root/EnemySpawner").OwnerMap; } }
+		private PackedScene Tower1 { get; } = GD.Load<PackedScene>(
+			"res://Assets/Objects/Actors/Defenses/Tower1/Tower1.tscn"
+		);
+		
+		#endregion
 
-	public override void _Ready(){
-	  this.ChildCamera.LookAt(this.GlobalTransform.origin, Vector3.Up);
-			this.CamInitLoc = this.ChildCamera.Transform.origin;
-	}
-	public override void _Input(InputEvent @event){
+		public override void _Ready(){
+		this.ChildCamera.LookAt(this.GlobalTransform.origin, Vector3.Up);
+				this.CamInitLoc = this.ChildCamera.Transform.origin;
+		}
+		public override void _Input(InputEvent @event){
 			if (@event is InputEventMouseMotion && this.IsRotating){
 				this.RotateY((-MouseSensitivity * (@event as InputEventMouseMotion)?.Relative.x).Value);
+			}
+
+			if(Input.IsActionJustPressed("ui_accept")){
+				PlacingDefenses = !PlacingDefenses;
+				GD.Print($"Placing Defenses = {PlacingDefenses}");
+			}
+			if (Input.IsActionJustPressed("ui_left_click") && PlacingDefenses){  //Teste
+				PlaceDefense();
 			}
 		}
 		public override void _Process(float delta){
@@ -50,7 +65,7 @@ namespace TowerDefense{
 
 
 			if (Input.IsActionJustReleased("ui_scroll_up") && relativeY > (this.MinDistance + this.GlobalTransform.origin.y))
-					currCamTransform.origin -= currCamTransform.basis.z * this.CamZoomSpeed * delta;
+				currCamTransform.origin -= currCamTransform.basis.z * this.CamZoomSpeed * delta;
 			else if (Input.IsActionJustReleased("ui_scroll_down") && relativeY < this.MaxDistance + this.GlobalTransform.origin.y)
 				currCamTransform.origin += currCamTransform.basis.z * this.CamZoomSpeed * delta;
 			
@@ -61,7 +76,37 @@ namespace TowerDefense{
 				IsRotating = true;
 
 			if (Input.IsActionJustReleased("ui_right_click"))
-				IsRotating = false;
+				IsRotating = false;				
+		}
+
+		public void PlaceDefense(){
+			var mousePos = this.GetViewport().GetMousePosition();
+			var from = this.ChildCamera.ProjectRayOrigin(mousePos);
+			var to = from + (this.ChildCamera.ProjectRayNormal(mousePos) * 1000);
+			Vector3 placementPoint;
+
+			Transform currRayCastTransform = this.ChildRayCast.Transform;			
+			currRayCastTransform.origin = from;
+			ChildRayCast.Transform = currRayCastTransform;
+			ChildRayCast.CastTo = to;
+			ChildRayCast.ForceRaycastUpdate();
+			if (ChildRayCast.IsColliding()){
+				Vector3 collisionPoint = ChildRayCast.GetCollisionPoint();
+				var mapIndex = new Vector3Int(OwnerMap.WorldToMap(collisionPoint));
+				placementPoint = OwnerMap.MapToWorld(
+					mapIndex.X,
+					mapIndex.Y,
+					mapIndex.Z
+				);
+				
+				var newTower = Tower1.Instance() as Tower;
+				newTower.Transform = new Transform{
+					basis = Basis.Identity,
+					origin = placementPoint
+				};
+				this.GetTree().Root.AddChild(newTower);
+				GD.Print("Placed");
+			}
 		}
 	}
 }
