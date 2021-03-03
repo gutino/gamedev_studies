@@ -62,11 +62,12 @@ namespace TowerDefense{
         }
         
         private void Attack(){
-            foreach (var enemy in CloseEnemies.ToArray()){
+            var enemy = CloseEnemies.First();
+            // foreach (var enemy in CloseEnemies.ToArray()){
                 if (enemy != null){
                     this.FireProjectile(enemy);
                 }
-            }
+            // }
         }
 
         // TODO: jogar para interface.
