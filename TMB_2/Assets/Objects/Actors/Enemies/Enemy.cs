@@ -17,7 +17,7 @@ namespace TowerDefense{
 		[Export]
 		public float Height { get; set; } = 0.45f;
 		[Export]
-		public int HitPoints { get; set; } = 10;
+		public int HitPoints { get; set; } = 3;
 		#endregion
 
 		#region Private Properties
@@ -104,6 +104,7 @@ namespace TowerDefense{
 		}
 
 		public void TakeDmg(int damage){
+			Console.WriteLine($"Damaged! Current HP: {this.HitPoints}. Damage Taken: {damage}");
 			HitPoints -= damage;
 			if (HitPoints <= 0){
 				this.Die();
@@ -111,7 +112,8 @@ namespace TowerDefense{
 		}
 
 		private void Die(){
-			EmitSignal(nameof(EnemyDied), this);
+			EmitSignal(nameof(EnemyDied), WeakRef(this));
+			this.QueueFree();
 		}
 		
 	}

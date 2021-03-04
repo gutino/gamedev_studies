@@ -6,15 +6,15 @@
 extents = Vector3( 0.15, 0.15, 0.15 )
 
 [sub_resource type="Gradient" id=2]
-offsets = PoolRealArray( 0, 0.8 )
-colors = PoolColorArray( 1, 0.72549, 0, 1, 1, 0, 0, 1 )
+offsets = PoolRealArray( 0, 0.305361, 0.585082 )
+colors = PoolColorArray( 1, 0.72549, 0, 1, 1, 0.1875, 0, 1, 0.300781, 0.00234985, 0.00234985, 1 )
 
 [sub_resource type="GradientTexture" id=3]
 gradient = SubResource( 2 )
 width = 256
 
 [sub_resource type="Curve" id=4]
-_data = [ Vector2( 0.00503355, 0.155405 ), 0.0, 0.0, 0, 0, Vector2( 0.377517, 0.864865 ), 0.0, 0.0, 0, 0, Vector2( 1, 0 ), 0.0, 0.0, 0, 0 ]
+_data = [ Vector2( 0, 0.464773 ), 0.0, 4.38303, 0, 0, Vector2( 1, 0 ), 0.0, 0.0, 0, 0 ]
 
 [sub_resource type="CurveTexture" id=5]
 width = 256
@@ -23,7 +23,8 @@ curve = SubResource( 4 )
 [sub_resource type="ParticlesMaterial" id=6]
 emission_shape = 1
 emission_sphere_radius = 0.02
-gravity = Vector3( 0, 1, 0 )
+direction = Vector3( 0, 0, 0 )
+gravity = Vector3( 0, 0, 0 )
 scale_curve = SubResource( 5 )
 color_ramp = SubResource( 3 )
 
@@ -39,6 +40,7 @@ radial_segments = 10
 rings = 6
 
 [node name="Firebolt" type="Area"]
+collision_layer = 4
 script = ExtResource( 1 )
 __meta__ = {
 "_editor_description_": ""
@@ -49,7 +51,11 @@ shape = SubResource( 1 )
 
 [node name="Particles" type="Particles" parent="."]
 transform = Transform( 1, 0, 0, 0, -1.62921e-07, -1, 0, 1, -1.62921e-07, 0, 0, 0 )
-amount = 24
-lifetime = 1.25
+amount = 28
+lifetime = 0.25
+local_coords = false
 process_material = SubResource( 6 )
 draw_pass_1 = SubResource( 8 )
+
+[node name="FreeTimer" type="Timer" parent="."]
+one_shot = true

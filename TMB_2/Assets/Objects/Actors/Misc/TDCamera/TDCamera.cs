@@ -1,3 +1,4 @@
+using System;
 using Godot;
 
 namespace TowerDefense{
@@ -81,31 +82,32 @@ namespace TowerDefense{
 
 		public void PlaceDefense(){
 			var mousePos = this.GetViewport().GetMousePosition();
-			var from = this.ChildCamera.ProjectRayOrigin(mousePos);
-			var to = from + (this.ChildCamera.ProjectRayNormal(mousePos) * 1000);
-			Vector3 placementPoint;
+			var to = this.ChildCamera.ProjectRayNormal(mousePos) * 1000;
 
-			Transform currRayCastTransform = this.ChildRayCast.Transform;			
-			currRayCastTransform.origin = from;
-			ChildRayCast.Transform = currRayCastTransform;
-			ChildRayCast.CastTo = to;
+			ChildRayCast.Transform = this.ChildCamera.Transform;
+			ChildRayCast.CastTo = ChildRayCast.ToLocal(to);
 			ChildRayCast.ForceRaycastUpdate();
+
 			if (ChildRayCast.IsColliding()){
 				Vector3 collisionPoint = ChildRayCast.GetCollisionPoint();
-				var mapIndex = new Vector3Int(OwnerMap.WorldToMap(collisionPoint));
-				placementPoint = OwnerMap.MapToWorld(
-					mapIndex.X,
-					mapIndex.Y,
-					mapIndex.Z
-				);
 				
-				var newTower = Tower1.Instance() as Tower;
-				newTower.Transform = new Transform{
-					basis = Basis.Identity,
-					origin = placementPoint
-				};
-				this.GetTree().Root.AddChild(newTower);
-				GD.Print("Placed");
+				var tileLoc = new Vector3Int(OwnerMap.WorldToMap(collisionPoint));
+				
+				var tile = OwnerMap.GetMapTile(tileLoc);
+
+				if (tile?.Type == TileType.BUILDABLE) {
+
+					var newTower = Tower1.Instance() as Tower;
+					newTower.Transform = new Transform{
+						basis = Basis.Identity,
+						origin = OwnerMap.MapToWorld(
+							tileLoc.X,
+							tileLoc.Y,
+							tileLoc.Z
+						)
+					};
+					this.GetTree().Root.AddChild(newTower);
+				}
 			}
 		}
 	}

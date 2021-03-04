@@ -2,7 +2,7 @@ using Godot;
 using System;
 
 namespace TowerDefense {
-	public class TowerProjectile : Area {
+	public abstract class TowerProjectile : Area {
 		[Export]
 		public float Speed { get; set; } = 5.0f;
 		[Export]
@@ -26,11 +26,12 @@ namespace TowerDefense {
 			return this;
 		}
 
-		private void SelfDestruct() {
+		protected virtual void SelfDestruct() {
+			this.Monitoring = false;
 			this.QueueFree();
 		}
 
-		public void On_Enemy_Hit(Node body) {
+		public virtual void On_Enemy_Hit(Node body) {
 
 			if (
 				this.Target.GetRef() is Enemy targetRef &&
