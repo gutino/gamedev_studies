@@ -30,8 +30,12 @@ namespace TowerDefense{
 
         public void On_Area_Entered(Node body){
             if (body.IsInGroup("Enemies")){
+
                 Enemy enemy = body.GetOwner<Enemy>();
+
                 CloseEnemies.Add( WeakRef(enemy) );
+
+                enemy.Connect("EnemyDied", this, nameof(this.RemoveEnemy));
 
                 if (CloseEnemies.Count > 0 && !Attacking){
                     Attacking = true;

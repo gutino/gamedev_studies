@@ -90,17 +90,24 @@ namespace TowerDefense{
 
 			if (ChildRayCast.IsColliding()){
 				Vector3 collisionPoint = ChildRayCast.GetCollisionPoint();
-				var mapIndex = new Vector3Int(OwnerMap.WorldToMap(collisionPoint));				
-				var newTower = Tower1.Instance() as Tower;
-				newTower.Transform = new Transform{
-					basis = Basis.Identity,
-					origin = OwnerMap.MapToWorld(
-						mapIndex.X,
-						mapIndex.Y,
-						mapIndex.Z
-					)
-				};
-				this.GetTree().Root.AddChild(newTower);
+				
+				var tileLoc = new Vector3Int(OwnerMap.WorldToMap(collisionPoint));
+				
+				var tile = OwnerMap.GetMapTile(tileLoc);
+
+				if (tile?.Type == TileType.BUILDABLE) {
+
+					var newTower = Tower1.Instance() as Tower;
+					newTower.Transform = new Transform{
+						basis = Basis.Identity,
+						origin = OwnerMap.MapToWorld(
+							tileLoc.X,
+							tileLoc.Y,
+							tileLoc.Z
+						)
+					};
+					this.GetTree().Root.AddChild(newTower);
+				}
 			}
 		}
 	}
