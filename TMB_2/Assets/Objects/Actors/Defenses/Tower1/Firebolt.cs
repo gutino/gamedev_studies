@@ -8,16 +8,19 @@ namespace TowerDefense{
 		private Timer FreeTimer {get{return this.GetNode<Timer>("FreeTimer");}}
 
     public override void _Ready() {
+			Console.WriteLine("Ready");
       this.FreeTimer.Connect("timeout", this, nameof(this.FreeTimerTimeout));
 			base._Ready();
     }
 
 		protected override void SelfDestruct() {
-			this.FireParticles.Emitting = false;
+			//this.FireParticles.Emitting = false;
+			Console.WriteLine("Firebolt");
 			this.FreeTimer.Start(this.FireParticles.Lifetime);
 		}
 		
 		private void FreeTimerTimeout(){
+			Console.WriteLine("Timeout");
 			base.SelfDestruct();
 		}
 

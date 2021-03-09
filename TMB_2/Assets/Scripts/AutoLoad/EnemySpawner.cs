@@ -4,7 +4,7 @@ namespace TowerDefense{
     public class EnemySpawner : Node{
 
         [Export]
-        public float SpawnDelay { get; set; } = 2.0f;
+        public float SpawnDelay { get; set; } = 0.2f;
         public DefenseGridMap OwnerMap { get; set; }
         private Timer SpawnTimer { get; set; } = new Timer();
 

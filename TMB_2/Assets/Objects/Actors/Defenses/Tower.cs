@@ -78,6 +78,8 @@ namespace TowerDefense{
         public abstract void FireProjectile(WeakRef target);
 
         public void RemoveEnemy(WeakRef enemy){
+            if (enemy.GetRef() is Enemy enemyRef)
+                enemyRef.Disconnect("EnemyDied", this, nameof(this.RemoveEnemy));
             CloseEnemies.RemoveAll( e => e.GetRef() == enemy.GetRef() );
         }
         

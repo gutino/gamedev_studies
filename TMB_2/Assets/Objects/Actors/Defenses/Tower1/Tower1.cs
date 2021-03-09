@@ -9,7 +9,6 @@ namespace TowerDefense{
 
 		public override void FireProjectile(WeakRef target){
 			var projectile = ProjectileScene.Instance() as TowerProjectile;
-
 			projectile.Init( target );
 			this.ProjectileSpawner.AddChild(projectile);
 		}
