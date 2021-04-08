@@ -144,7 +144,7 @@ tracks/3/keys = {
 script = ExtResource( 4 )
 
 [node name="enemy_ufoPurpleWeapon" type="MeshInstance" parent="."]
-transform = Transform( -2.62266e-08, 1.17992e-10, 0.6, 0.00269948, 0.599994, 6.39305e-15, -0.599994, 0.00269948, -2.62268e-08, 0, 0.0336695, 0 )
+transform = Transform( -2.62268e-08, 0, 0.6, 0, 0.6, 0, -0.6, 0, -2.62268e-08, 0, 0.45, 0 )
 mesh = SubResource( 1 )
 material/0 = null
 material/1 = null

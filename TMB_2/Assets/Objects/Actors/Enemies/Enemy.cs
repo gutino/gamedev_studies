@@ -11,7 +11,7 @@ namespace TowerDefense{
 
 		#region Exported Properties
 		[Export]
-		public float MovDur { get; set; } = 0.3f;
+		public float MovDur { get; set; } = 0.2f;
 		[Export]
 		public float RotDur { get; set; } = 0.01f;
 		[Export]
@@ -60,7 +60,7 @@ namespace TowerDefense{
 
 			if (currTileInfo.Type == TileType.GOAL){
 				this.AnimPlayer.Play("EndReached");
-				this.EmitSignal("EnemyDied",WeakRef(this));
+				this.EmitSignal("EnemyDied", WeakRef(this));
 				return;
 			}
 
